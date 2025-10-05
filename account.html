@@ -147,33 +147,49 @@
     <p>IAm. — Becoming starts with being.</p>
   </footer>
 
-  <script>
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const lastUserID = sessionStorage.getItem("loggedInUserID");
-    const accountInfo = document.getElementById("accountInfo");
+<!-- Only change inside your existing account-container script section -->
+<script>
+const users=JSON.parse(localStorage.getItem("users"))||[];
+const lastUserID=sessionStorage.getItem("loggedInUserID");
+const accountInfo=document.getElementById("accountInfo");
 
-    if (lastUserID && users.length > 0) {
-      const user = users.find((u) => u.id === lastUserID);
-      if (user) {
-        accountInfo.innerHTML = `
-          <p><span>First Name:</span> ${user.firstName}</p>
-          <p><span>Last Name:</span> ${user.lastName}</p>
-          <p><span>Date of Birth:</span> ${user.dob}</p>
-          <p><span>Gender:</span> ${user.gender}</p>
-          <p><span>IAm. ID:</span> ${user.id}</p>
-        `;
-      } else {
-        accountInfo.innerHTML = "<p>Account not found.</p>";
-      }
+if(lastUserID&&users.length>0){
+  const user=users.find(u=>u.id===lastUserID);
+  if(user){
+    let personalityHTML="";
+    if(user.personality){
+      const p=user.personality;
+      personalityHTML=`
+        <h3>Personality Type: ${p.type}</h3>
+        <p>Extrovert (E): ${p.percentages.E}% | Introvert (I): ${p.percentages.I}%</p>
+        <p>Thinking (T): ${p.percentages.T}% | Feeling (F): ${p.percentages.F}%</p>
+        <p>Judging (J): ${p.percentages.J}% | Perceiving (P): ${p.percentages.P}%</p>
+        <p>Sensing (S): ${p.percentages.S}% | Intuitive (N): ${p.percentages.N}%</p>
+      `;
     } else {
-      accountInfo.innerHTML = "<p>No user logged in.</p>";
+      personalityHTML="<p>No personality test results yet.</p>";
     }
 
-    function logout() {
-      sessionStorage.removeItem("loggedInUserID");
-      window.location.href = "index.html";
-    }
-  </script>
+    accountInfo.innerHTML=`
+      <p><span>First Name:</span> ${user.firstName}</p>
+      <p><span>Last Name:</span> ${user.lastName}</p>
+      <p><span>Date of Birth:</span> ${user.dob}</p>
+      <p><span>Gender:</span> ${user.gender}</p>
+      <p><span>IAm. ID:</span> ${user.id}</p>
+      <div class="personality">${personalityHTML}</div>
+    `;
+  } else {
+    accountInfo.innerHTML="<p>Account not found.</p>";
+  }
+} else {
+  accountInfo.innerHTML="<p>No user logged in.</p>";
+}
+function logout(){
+  sessionStorage.removeItem("loggedInUserID");
+  window.location.href="index.html";
+}
+</script>
+
 </body>
 </html>
 
