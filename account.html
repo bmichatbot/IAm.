@@ -1,1 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IAm. | Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --beige: #f8f3ec;
+      --soft-brown: #8c7b6b;
+      --accent: #d2bfa3;
+      --cream: #fffdf9;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--beige);
+      font-family: 'Quicksand', sans-serif;
+      color: var(--soft-brown);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      background-color: var(--cream);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--accent);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1.8rem;
+      margin: 0;
+      color: var(--soft-brown);
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--soft-brown);
+      margin: 0 1rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .account-container {
+      margin-top: 3rem;
+      background: var(--cream);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      animation: fadeInUp 1.2s ease;
+    }
+
+    h2 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .info {
+      text-align: left;
+      margin-top: 1rem;
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    .info span {
+      font-weight: 600;
+      color: var(--soft-brown);
+    }
+
+    .logout-btn {
+      margin-top: 2rem;
+      background-color: var(--soft-brown);
+      color: var(--cream);
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .logout-btn:hover {
+      background-color: var(--accent);
+      color: var(--soft-brown);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--soft-brown);
+      margin-top: auto;
+      padding: 1.5rem;
+      background-color: var(--cream);
+      width: 100%;
+      border-top: 1px solid var(--accent);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>IAm.</h1>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="jobtest.html">Job Test</a>
+      <a href="collegetest.html">College Test</a>
+      <a href="personality.html">Personality Test</a>
+      <a href="affirms.html">Affirms</a>
+    </nav>
+  </header>
+
+  <div class="account-container">
+    <h2>Your Account</h2>
+    <div id="accountInfo" class="info"></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <footer>
+    <p>IAm. — Becoming starts with being.</p>
+  </footer>
+
+  <script>
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const lastUserID = sessionStorage.getItem("loggedInUserID");
+    const accountInfo = document.getElementById("accountInfo");
+
+    if (lastUserID && users.length > 0) {
+      const user = users.find((u) => u.id === lastUserID);
+      if (user) {
+        accountInfo.innerHTML = `
+          <p><span>First Name:</span> ${user.firstName}</p>
+          <p><span>Last Name:</span> ${user.lastName}</p>
+          <p><span>Date of Birth:</span> ${user.dob}</p>
+          <p><span>Gender:</span> ${user.gender}</p>
+          <p><span>IAm. ID:</span> ${user.id}</p>
+        `;
+      } else {
+        accountInfo.innerHTML = "<p>Account not found.</p>";
+      }
+    } else {
+      accountInfo.innerHTML = "<p>No user logged in.</p>";
+    }
+
+    function logout() {
+      sessionStorage.removeItem("loggedInUserID");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
 
