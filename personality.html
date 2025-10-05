@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IAm. | Personality Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --beige:#f8f3ec;
+    --soft-brown:#8c7b6b;
+    --accent:#d2bfa3;
+    --cream:#fffdf9;
+  }
+  body{
+    margin:0;
+    background:var(--beige);
+    font-family:'Quicksand',sans-serif;
+    color:var(--soft-brown);
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    align-items:center;
+  }
+  header{
+    width:100%;
+    background:var(--cream);
+    padding:1rem 2rem;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--accent);
+    position:sticky;top:0;z-index:10;
+  }
+  header h1{
+    font-family:'Poppins',sans-serif;
+    margin:0;font-weight:600;color:var(--soft-brown);
+  }
+  nav a{
+    text-decoration:none;color:var(--soft-brown);
+    margin:0 1rem;font-weight:500;transition:color .3s;
+  }
+  nav a:hover{color:var(--accent);}
+  .test-container{
+    background:var(--cream);
+    box-shadow:0 4px 20px rgba(0,0,0,0.05);
+    border-radius:20px;
+    width:90%;max-width:600px;
+    padding:2rem;margin:3rem 0;
+    text-align:center;
+    animation:fadeInUp 1s ease;
+  }
+  h2{font-family:'Poppins',sans-serif;font-weight:500;}
+  .question{font-size:1.2rem;margin-bottom:2rem;}
+  .options button{
+    background:var(--beige);
+    border:1px solid var(--accent);
+    border-radius:12px;
+    padding:0.7rem 1rem;
+    margin:0.4rem;
+    cursor:pointer;
+    font-size:1rem;
+    transition:all .3s;
+    color:var(--soft-brown);
+  }
+  .options button:hover{background:var(--accent);color:white;}
+  .progress{display:flex;justify-content:center;margin-top:1.5rem;gap:0.3rem;}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);opacity:.3;transition:opacity .3s;}
+  .dot.active{opacity:1;}
+  #results{display:none;animation:fadeInUp 1s ease;}
+  .bar{background:var(--accent);height:10px;border-radius:10px;margin:5px 0;}
+  footer{text-align:center;font-size:.9rem;color:var(--soft-brown);margin-top:auto;padding:1.5rem;background:var(--cream);width:100%;border-top:1px solid var(--accent);}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+  <header>
+    <h1>IAm.</h1>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="jobtest.html">Job Test</a>
+      <a href="collegetest.html">College Test</a>
+      <a href="personality.html">Personality Test</a>
+      <a href="affirms.html">Affirms</a>
+      <a href="account.html">Account</a>
+    </nav>
+  </header>
+
+  <div class="test-container" id="quiz">
+    <h2>Personality Test</h2>
+    <p class="question" id="questionText"></p>
+    <div class="options" id="options"></div>
+    <div class="progress" id="progressDots"></div>
+  </div>
+
+  <div class="test-container" id="results">
+    <h2>Your IAm. Personality</h2>
+    <p id="summaryText"></p>
+    <div id="resultBars"></div>
+    <button onclick="restart()">Retake Test</button>
+  </div>
+
+  <footer><p>IAm. — Becoming starts with being.</p></footer>
+
+<script>
+const questions=[
+  {text:"You enjoy being the center of attention.", trait:"E"},
+  {text:"You prefer spending time alone or with close friends.", trait:"I"},
+  {text:"You rely more on logic than feelings when making decisions.", trait:"T"},
+  {text:"You often follow your heart over your head.", trait:"F"},
+  {text:"You like having everything planned and organized.", trait:"J"},
+  {text:"You often go with the flow and decide later.", trait:"P"},
+  {text:"You trust facts more than possibilities.", trait:"S"},
+  {text:"You enjoy imagining future possibilities.", trait:"N"}
+];
+let current=0;
+let scores={E:0,I:0,T:0,F:0,J:0,P:0,S:0,N:0};
+
+const qText=document.getElementById('questionText');
+const optDiv=document.getElementById('options');
+const dots=document.getElementById('progressDots');
+const results=document.getElementById('results');
+const quiz=document.getElementById('quiz');
+const bars=document.getElementById('resultBars');
+const summary=document.getElementById('summaryText');
+
+function renderQuestion(){
+  const q=questions[current];
+  qText.textContent=q.text;
+  optDiv.innerHTML="";
+  ["Strongly Disagree","Disagree","Neutral","Agree","Strongly Agree"].forEach((label,idx)=>{
+    const btn=document.createElement("button");
+    btn.textContent=label;
+    btn.onclick=()=>nextQuestion(q.trait,idx);
+    optDiv.appendChild(btn);
+  });
+  renderDots();
+}
+function renderDots(){
+  dots.innerHTML="";
+  for(let i=0;i<questions.length;i++){
+    const dot=document.createElement("div");
+    dot.classList.add("dot");
+    if(i===current)dot.classList.add("active");
+    dots.appendChild(dot);
+  }
+}
+function nextQuestion(trait,choice){
+  const value=choice-2;
+  scores[trait]+=value;
+  current++;
+  if(current<questions.length){
+    renderQuestion();
+  }else showResults();
+}
+function showResults(){
+  quiz.style.display="none";
+  results.style.display="block";
+  const resultsMap={
+    EI:scores.E-scores.I,
+    TF:scores.T-scores.F,
+    JP:scores.J-scores.P,
+    SN:scores.S-scores.N
+  };
+  const percentages={
+    E:Math.round((scores.E+10)/20*100),
+    I:Math.round((scores.I+10)/20*100),
+    T:Math.round((scores.T+10)/20*100),
+    F:Math.round((scores.F+10)/20*100),
+    J:Math.round((scores.J+10)/20*100),
+    P:Math.round((scores.P+10)/20*100),
+    S:Math.round((scores.S+10)/20*100),
+    N:Math.round((scores.N+10)/20*100)
+  };
+  const type=(resultsMap.EI>0?"E":"I")+(resultsMap.SN>0?"S":"N")+(resultsMap.TF>0?"T":"F")+(resultsMap.JP>0?"J":"P");
+  bars.innerHTML=`
+    <p>Extrovert (E): ${percentages.E}%</p><div class="bar" style="width:${percentages.E}%;"></div>
+    <p>Introvert (I): ${percentages.I}%</p><div class="bar" style="width:${percentages.I}%;"></div>
+    <p>Thinking (T): ${percentages.T}%</p><div class="bar" style="width:${percentages.T}%;"></div>
+    <p>Feeling (F): ${percentages.F}%</p><div class="bar" style="width:${percentages.F}%;"></div>
+    <p>Judging (J): ${percentages.J}%</p><div class="bar" style="width:${percentages.J}%;"></div>
+    <p>Perceiving (P): ${percentages.P}%</p><div class="bar" style="width:${percentages.P}%;"></div>
+    <p>Sensing (S): ${percentages.S}%</p><div class="bar" style="width:${percentages.S}%;"></div>
+    <p>Intuitive (N): ${percentages.N}%</p><div class="bar" style="width:${percentages.N}%;"></div>
+  `;
+  summary.textContent=`Your personality type resembles ${type}-type tendencies.`;
+
+  // Save to localStorage for logged user
+  const users=JSON.parse(localStorage.getItem("users"))||[];
+  const id=sessionStorage.getItem("loggedInUserID");
+  if(id){
+    const user=users.find(u=>u.id===id);
+    if(user){
+      user.personality={type,percentages};
+      localStorage.setItem("users",JSON.stringify(users));
+    }
+  }
+}
+function restart(){
+  current=0;
+  scores={E:0,I:0,T:0,F:0,J:0,P:0,S:0,N:0};
+  results.style.display="none";
+  quiz.style.display="block";
+  renderQuestion();
+}
+renderQuestion();
+</script>
+</body>
+</html>
