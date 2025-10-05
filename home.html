@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IAm. | Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --beige: #f8f3ec;
+      --soft-brown: #8c7b6b;
+      --accent: #d2bfa3;
+      --cream: #fffdf9;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--beige);
+      font-family: 'Quicksand', sans-serif;
+      color: var(--soft-brown);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      width: 100%;
+      background-color: var(--cream);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--accent);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1.8rem;
+      margin: 0;
+      color: var(--soft-brown);
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--soft-brown);
+      margin: 0 1rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .content {
+      text-align: center;
+      max-width: 750px;
+      padding: 2rem;
+      line-height: 1.6;
+      animation: fadeInUp 1.2s ease forwards;
+      opacity: 0;
+    }
+
+    .greeting {
+      font-size: 1.4rem;
+      color: var(--soft-brown);
+      font-weight: 500;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeInUp 1.2s ease 0.5s forwards;
+    }
+
+    .content h2 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.6s forwards;
+    }
+
+    .content p {
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.7s forwards;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.8s forwards;
+    }
+
+    .card {
+      background: var(--cream);
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      width: 200px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid var(--accent);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      background-color: var(--accent);
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--soft-brown);
+      margin-top: auto;
+      padding: 1.5rem;
+      background-color: var(--cream);
+      width: 100%;
+      border-top: 1px solid var(--accent);
+      opacity: 0;
+      animation: fadeIn 1s ease 1s forwards;
+    }
+
+    /* ---- Animations ---- */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>IAm.</h1>
+    <nav>
+      <a href="jobtest.html">Job Test</a>
+      <a href="collegetest.html">College Test</a>
+      <a href="affirms.html">Affirms</a>
+      <a href="account.html">Account</a>
+    </nav>
+  </header>
+
+  <div class="content">
+    <div class="greeting" id="greeting">Welcome to IAm.</div>
+
+    <h2>Why IAm. Exists</h2>
+    <p>
+      IAm. is a space designed to help you breathe, reflect, and rediscover your purpose.
+      It’s built for a generation that’s full of dreams but often feels directionless.
+      Here, we slow down and remember who we are — before the world told us who we should be.
+    </p>
+
+    <h2>Our Vision</h2>
+    <p>
+      To help every young person find their purpose and live a life filled with clarity, growth, and peace.
+    </p>
+
+    <h2>Our Mission</h2>
+    <p>
+      To empower Gen Z and Gen Alpha with simple tools that nurture confidence, calling, and community.
+      You were made for something — IAm. helps you find it.
+    </p>
+
+    <div class="cards">
+      <div class="card" onclick="location.href='jobtest.html'">Job Test</div>
+      <div class="card" onclick="location.href='collegetest.html'">College Test</div>
+      <div class="card" onclick="location.href='affirms.html'">Affirms</div>
+      <div class="card" onclick="location.href='account.html'">Account</div>
+    </div>
+  </div>
+
+  <footer>
+    <p>IAm. — Becoming starts with being.</p>
+  </footer>
+
+  <script>
+    // Retrieve user from localStorage using last logged-in ID
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const lastUserID = sessionStorage.getItem("loggedInUserID");
+    const greeting = document.getElementById("greeting");
+
+    if (lastUserID && users.length > 0) {
+      const user = users.find((u) => u.id === lastUserID);
+      if (user) {
+        greeting.textContent = `Welcome back, ${user.firstName}.`;
+      }
+    }
+
+    // Optional: Smooth scroll fade-ins for longer pages
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+        }
+      });
+    });
+
+    document.querySelectorAll('.content h2, .content p, .cards').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
