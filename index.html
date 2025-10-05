@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IAm. | Sign In or Join</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- GLOBAL ---------- */
+    :root {
+      --beige: #f8f3ec;
+      --soft-brown: #8c7b6b;
+      --cream: #ffffff;
+      --accent: #d2bfa3;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Quicksand', sans-serif;
+      background-color: var(--beige);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--soft-brown);
+      transition: background 0.4s ease;
+    }
+
+    .container {
+      background: var(--cream);
+      box-shadow: 0 4px 30px var(--shadow);
+      border-radius: 20px;
+      padding: 2rem 3rem;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+    }
+
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      color: var(--soft-brown);
+      margin-bottom: 0.5rem;
+    }
+
+    h3 {
+      font-weight: 400;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.4rem 0;
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      background-color: var(--beige);
+      font-size: 1rem;
+      outline: none;
+      color: var(--soft-brown);
+      transition: all 0.2s ease-in-out;
+    }
+
+    input:focus, select:focus {
+      box-shadow: 0 0 6px var(--accent);
+      background-color: var(--cream);
+    }
+
+    button {
+      width: 100%;
+      background-color: var(--soft-brown);
+      color: var(--cream);
+      border: none;
+      padding: 0.9rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    button:hover {
+      background-color: var(--accent);
+      color: var(--soft-brown);
+    }
+
+    .toggle-link {
+      color: var(--soft-brown);
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #message {
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      color: var(--accent);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- LOGIN SECTION -->
+    <div id="loginSection">
+      <h1>IAm.</h1>
+      <h3>Welcome Back</h3>
+      <input type="text" id="loginID" placeholder="Your IAm. ID" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <button onclick="login()">Login</button>
+      <p>Don’t have an account? <span class="toggle-link" onclick="showSignup()">Sign up</span></p>
+      <p id="loginMessage"></p>
+    </div>
+
+    <!-- SIGNUP SECTION -->
+    <div id="signupSection" class="hidden">
+      <h1>IAm.</h1>
+      <h3>Create Your Account</h3>
+      <input type="text" id="firstName" placeholder="First Name" required />
+      <input type="text" id="lastName" placeholder="Last Name" required />
+      <input type="date" id="dob" required />
+      <select id="gender" required>
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+      <input type="password" id="signupPassword" placeholder="Password" required />
+      <button onclick="signUp()">Sign Up</button>
+      <p>Already have an account? <span class="toggle-link" onclick="showLogin()">Log in</span></p>
+      <p id="message"></p>
+    </div>
+  </div>
+
+  <script>
+    const loginSection = document.getElementById("loginSection");
+    const signupSection = document.getElementById("signupSection");
+    const message = document.getElementById("message");
+    const loginMessage = document.getElementById("loginMessage");
+
+    function showSignup() {
+      loginSection.classList.add("hidden");
+      signupSection.classList.remove("hidden");
+    }
+
+    function showLogin() {
+      signupSection.classList.add("hidden");
+      loginSection.classList.remove("hidden");
+    }
+
+    // SIGNUP FUNCTION
+    function signUp() {
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const dob = document.getElementById("dob").value;
+      const gender = document.getElementById("gender").value;
+      const password = document.getElementById("signupPassword").value.trim();
+
+      if (!firstName || !lastName || !dob || !gender || !password) {
+        message.textContent = "Please fill in all fields.";
+        return;
+      }
+
+      const id = "IAM" + Math.floor(100000 + Math.random() * 900000);
+
+      // Retrieve existing users or create a new list
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const newUser = { id, firstName, lastName, dob, gender, password };
+
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+
+      message.innerHTML = `Your IAm. ID is <strong>${id}</strong><br>Save this to log in later.`;
+    }
+
+    // LOGIN FUNCTION
+    function login() {
+      const id = document.getElementById("loginID").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+
+      const user = users.find((u) => u.id === id && u.password === password);
+
+      if (user) {
+        loginMessage.style.color = "green";
+        loginMessage.textContent = "Login successful! Redirecting...";
+        setTimeout(() => {
+          window.location.href = "home.html"; // your home page
+        }, 1200);
+      } else {
+        loginMessage.style.color = "crimson";
+        loginMessage.textContent = "Invalid ID or password.";
+      }
+    }
+  </script>
+</body>
+</html>
