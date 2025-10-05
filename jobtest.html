@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAm. | Job Cluster Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --beige:#f8f3ec;
+    --soft-brown:#8c7b6b;
+    --accent:#d2bfa3;
+    --cream:#fffdf9;
+  }
+  body {
+    margin:0;
+    background:var(--beige);
+    font-family:'Quicksand',sans-serif;
+    color:var(--soft-brown);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+  }
+  header {
+    width:100%;
+    background:var(--cream);
+    padding:1rem 2rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--accent);
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+  }
+  header h1 {font-family:'Poppins',sans-serif;font-weight:600;}
+  nav a {text-decoration:none;color:var(--soft-brown);margin:0 1rem;font-weight:500;}
+  nav a:hover{color:var(--accent);}
+  .container {
+    background:var(--cream);
+    border-radius:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.05);
+    width:90%;
+    max-width:600px;
+    padding:2rem;
+    margin:2rem 0;
+    text-align:center;
+    animation:fadeInUp 1s ease;
+  }
+  h2 {font-family:'Poppins',sans-serif;}
+  .question {font-size:1.2rem;margin-bottom:1.5rem;}
+  .options button {
+    background:var(--beige);
+    border:1px solid var(--accent);
+    border-radius:10px;
+    padding:0.7rem 1rem;
+    margin:0.4rem;
+    cursor:pointer;
+    font-size:1rem;
+    color:var(--soft-brown);
+    transition:all .3s ease;
+  }
+  .options button:hover {
+    background:var(--accent);
+    color:#fff;
+  }
+  #result {
+    display:none;
+    animation:fadeInUp 1s ease;
+  }
+  .cluster {
+    font-weight:600;
+    font-size:1.2rem;
+    color:var(--soft-brown);
+    margin:1rem 0;
+  }
+  footer {
+    text-align:center;
+    font-size:.9rem;
+    color:var(--soft-brown);
+    margin-top:auto;
+    padding:1.5rem;
+    background:var(--cream);
+    width:100%;
+    border-top:1px solid var(--accent);
+  }
+  @keyframes fadeInUp {from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>IAm.</h1>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="jobtest.html">Job Test</a>
+    <a href="collegetest.html">College Test</a>
+    <a href="personality.html">Personality Test</a>
+    <a href="affirms.html">Affirms</a>
+    <a href="account.html">Account</a>
+  </nav>
+</header>
+
+<div class="container" id="quiz">
+  <h2>Find Your Job Cluster</h2>
+  <p class="question" id="questionText"></p>
+  <div class="options" id="options"></div>
+</div>
+
+<div class="container" id="result">
+  <h2>Your Career Cluster</h2>
+  <p class="cluster" id="clusterName"></p>
+  <p id="clusterDesc"></p>
+  <button onclick="exploreCluster()">Explore My Cluster</button>
+</div>
+
+<footer><p>IAm. — Becoming starts with being.</p></footer>
+
+<script>
+const questions = [
+  { text:"I enjoy solving complex problems or working with technology.", cluster:"STEM" },
+  { text:"I like helping people improve their health or wellbeing.", cluster:"Health Science" },
+  { text:"I express myself through writing, art, or music.", cluster:"Arts" },
+  { text:"I like managing money, planning, or organizing things.", cluster:"Business" },
+  { text:"I enjoy leading, teaching, or guiding others.", cluster:"Education" },
+  { text:"I feel called to protect or serve my community.", cluster:"Public Service" },
+  { text:"I’m energized by cooking, styling, or event planning.", cluster:"Hospitality" }
+];
+
+const clusters = {
+  STEM:{ name:"Science, Technology, Engineering & Math", desc:"You’re logical, analytical, and love innovation — fields like software, engineering, or data science could be perfect for you." },
+  Health:{ name:"Health Science", desc:"You care deeply for others — careers like nursing, medicine, or therapy may fit your compassionate spirit." },
+  Arts:{ name:"Arts, A/V Technology & Communication", desc:"Creative and expressive, you thrive in design, writing, filmmaking, or social media." },
+  Business:{ name:"Business & Finance", desc:"Strategic and organized — roles in marketing, entrepreneurship, or finance might be your path." },
+  Education:{ name:"Education & Training", desc:"You inspire others to grow — teaching, mentoring, and leadership light you up." },
+  Public:{ name:"Law, Public Service & Government", desc:"Driven by justice and fairness — you’d excel in law, law enforcement, or policy." },
+  Hospitality:{ name:"Hospitality & Human Services", desc:"People feel comfortable around you — careers in event planning, tourism, or customer care may fit you perfectly." }
+};
+
+let index=0;
+let scores={STEM:0,Health:0,Arts:0,Business:0,Education:0,Public:0,Hospitality:0};
+
+const qText=document.getElementById("questionText");
+const options=document.getElementById("options");
+const quiz=document.getElementById("quiz");
+const result=document.getElementById("result");
+const clusterName=document.getElementById("clusterName");
+const clusterDesc=document.getElementById("clusterDesc");
+
+function renderQuestion(){
+  const q=questions[index];
+  qText.textContent=q.text;
+  options.innerHTML="";
+  ["Disagree","Neutral","Agree"].forEach((opt,i)=>{
+    const btn=document.createElement("button");
+    btn.textContent=opt;
+    btn.onclick=()=>nextQuestion(q.cluster,i);
+    options.appendChild(btn);
+  });
+}
+function nextQuestion(cluster,choice){
+  if(choice===2)scores[cluster]+=2;
+  if(choice===1)scores[cluster]+=1;
+  index++;
+  if(index<questions.length){
+    renderQuestion();
+  }else showResult();
+}
+function showResult(){
+  quiz.style.display="none";
+  result.style.display="block";
+  const topCluster=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
+  const c=clusters[topCluster];
+  clusterName.textContent=c.name;
+  clusterDesc.textContent=c.desc;
+
+  // Save cluster to user profile
+  const users=JSON.parse(localStorage.getItem("users"))||[];
+  const id=sessionStorage.getItem("loggedInUserID");
+  if(id){
+    const user=users.find(u=>u.id===id);
+    if(user){
+      user.jobCluster=topCluster;
+      localStorage.setItem("users",JSON.stringify(users));
+    }
+  }
+}
+function exploreCluster(){
+  const cluster=sessionStorage.getItem("selectedCluster")||"";
+  window.location.href="jobcluster.html";
+}
+renderQuestion();
+</script>
+</body>
+</html>
